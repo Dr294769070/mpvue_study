@@ -1,8 +1,11 @@
-import Vue from 'vue'
-import App from './App'
+import vue from 'vue'
+import App from './app.vue'
+import store from './store/store'
 
-Vue.config.productionTip = false
-App.mpType = 'app'
+vue.config.productionTip = false // 将vue的提示功能关闭
+vue.prototype.$store = store
 
-const app = new Vue(App)
-app.$mount()
+App.myType = 'app' // 声明组件类型为应用
+
+const app = new vue(App)
+app.$mount() // 挂载当前应用

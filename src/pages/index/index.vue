@@ -1,126 +1,79 @@
 <template>
-  <div @click="clickHandle">
-
-    <div class="userinfo" @click="bindViewTap">
-      <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
-      <img class="userinfo-avatar" src="/static/images/user.png" background-size="cover" />
-
-      <div class="userinfo-nickname">
-        <card :text="userInfo.nickName"></card>
-      </div>
-    </div>
-
-    <div class="usermotto">
-      <div class="user-motto">
-        <card :text="motto"></card>
-      </div>
-    </div>
-
-    <form class="form-container">
-      <input type="text" class="form-control" :value="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
-    </form>
-
-    <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
-
-    <div class="all">
-        <div class="left">
-        </div>
-        <div class="right">
-        </div>
-    </div>
-  </div>
+<div class="index-container">
+    <img class="index-img" v-if="!showBtn" :src="userInfo.avatarUrl" alt="user" />
+    <button open-type="getUserInfo" class="btn" v-else @getuserinfo="getUserInfo">获取信息</button>
+    <p class="index-hello">hello mpvue</p>
+    <p class="index-study" @tap="toDetail">Go 小程序</p>
+</div>
 </template>
-
 <script>
-import card from '@/components/card'
-
 export default {
-  data () {
-    return {
-      motto: 'Hello miniprograme',
-      userInfo: {
-        nickName: 'mpvue',
-        avatarUrl: 'http://mpvue.com/assets/logo.png'
-      }
-    }
-  },
-
-  components: {
-    card
-  },
-
-  methods: {
-    bindViewTap () {
-      const url = '../logs/main'
-      if (mpvuePlatform === 'wx') {
-        mpvue.switchTab({ url })
-      } else {
-        mpvue.navigateTo({ url })
-      }
+    data() {
+        return {
+            userInfo: {},
+            showBtn: true
+        }
     },
-    clickHandle (ev) {
-      console.log('clickHandle:', ev)
-      // throw {message: 'custom test'}
+    beforeMount() {
+        this.handleGetUserInfo()
+    },
+    methods: {
+        getUserInfo(data) {
+            if (data.mp.detail.rawData) { // 用户授权
+                this.handleGetUserInfo()
+            }
+        },
+        handleGetUserInfo() {
+                wx.getUserInfo({
+                success: (data) => {
+                    console.log(data)
+                    this.userInfo = data.userInfo
+                    this.showBtn = false
+                },
+                fail: (err) => {
+                    console.log('err')
+                }
+                })
+        },
+        toDetail() {
+            wx.navigateTo({
+                url: '/pages/list/main'
+            })
+        }
     }
-  },
-
-  created () {
-    // let app = getApp()
-  }
 }
 </script>
-
+<style>
+page{
+    background: #F56C6C;
+}
+</style>
 <style scoped>
-.userinfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.index-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-
-.userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
+.index-img { 
+    width: 200rpx;
+    height: 200rpx;
+    border-radius: 100rpx;
+    margin: 100rpx 0;
 }
-
-.userinfo-nickname {
-  color: #aaa;
+.index-hello{
+    font-size: 40rpx;
+    font-weight: bold;
+    margin: 100rpx 0;
+    color: white;
 }
-
-.usermotto {
-  margin-top: 150px;
-}
-
-.form-control {
-  display: block;
-  padding: 0 12px;
-  margin-bottom: 5px;
-  border: 1px solid #ccc;
-}
-.all{
-  width:7.5rem;
-  height:1rem;
-  background-color:blue;
-}
-.all:after{
-  display:block;
-  content:'';
-  clear:both;
-}
-.left{
-  float:left;
-  width:3rem;
-  height:1rem;
-  background-color:red;
-}
-
-.right{
-  float:left;
-  width:4.5rem;
-  height:1rem;
-  background-color:green;
+.index-study, .btn{
+    width: 200rpx;
+    line-height: 80rpx;
+    font-size: 24rpx;
+    border: 1rpx solid #DCDFE6;
+    border-radius: 10rpx;
+    text-align: center;
+    color: white;
+    background: #F56C6C;
 }
 </style>
