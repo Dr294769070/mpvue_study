@@ -1,12 +1,11 @@
 <template>
     <div class="list-container">
-        <swiper indicator-dots indicator-color="#fff" indicator-active-color="pink">
-            <swiper-item v-for="(item, index) in imgList" :key="index">
+        <swiper indicator-dots indicator-color="#fff" indicator-active-color="pink" @change="changeCb">
+            <swiper-item v-for="item in imgList" :key="item.key">
                 <img class="swiper-img" :src="item.url" alt="picture" mode="aspectFit" />
             </swiper-item>
         </swiper>
-        <list-temp v-for="(item, index) in list" :key="index"
-         :one-obj="item"></list-temp>
+        <list-temp v-for="(item, index) in list" :key="index" :one-obj="item"></list-temp>
     </div>
 </template>
 <script>
@@ -21,20 +20,29 @@ export default {
         return {
             imgList: [
                 {
+                    key: 0,
                     url: require('../../../static/images/wxb.jpeg')
                 },
                 {
+                    key: 1,
                     url: require('../../../static/images/cris.jpg')
                 }
             ],
-            list: []
+            current: 0
         }
     },
     beforeCreate() {
         this.$store.commit('setListData', listData)
     },
-    created() {
-        this.list = this.$store.state.listData || []
+    computed: {
+        list() {
+            return this.$store.state.listData[this.current] || []
+        }
+    },
+    methods: {
+        changeCb(item) {
+            this.current = item.mp.detail.current
+        }
     }
 }
 </script>

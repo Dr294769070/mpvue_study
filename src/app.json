@@ -1,10 +1,27 @@
 {
     "pages": [
+        "pages/index/main",
         "pages/list/main",
-        "pages/index/main"
+        "pages/detail/main",
+        "pages/music/main",
+        "pages/movies/main"
     ],
     "window": {
         "backgroundColor": "#ffffff",
         "navigationBarBackgroundColor" : "#F56C6C"
+    },
+    "tabBar": {
+        "selectedColor": "#d81e06",
+        "list": [{
+            "pagePath": "pages/index/main",
+            "text": "首页",
+            "iconPath": "/static/icons/home.png",
+            "selectedIconPath": "/static/icons/home-select.png"
+          }, {
+            "pagePath": "pages/movies/main",
+            "text": "作品",
+            "iconPath": "/static/icons/movies.png",
+            "selectedIconPath": "/static/icons/movies-select.png"
+          }]
     }
 }

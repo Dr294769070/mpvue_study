@@ -7,7 +7,7 @@
         <h3 class="name" v-text="oneObj.name"></h3>
         <!-- img 明星照片 -->
         <img class="main-img" :src="oneObj.img" mode="widthFix" />
-        <p class="quotations">
+        <p class="quotations" @click="toDetail">
             {{ oneObj.quotations }}
         </p>
     </div>
@@ -23,6 +23,14 @@ export default {
         oneObj: {
             type: Object,
             default: () => {}
+        }
+    },
+    methods: {
+        toDetail() {
+            // 跳转至详情页面
+             wx.navigateTo({
+                url: `/pages/detail/main?video=${this.oneObj.video}`
+            })
         }
     }
 }
