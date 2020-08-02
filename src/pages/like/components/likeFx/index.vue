@@ -1,5 +1,7 @@
 <template>
+  <div>
     <canvas canvas-id="bubble" :style="canvasStyle" class="like-fx" ></canvas>
+  </div>
 </template>
 <script>
 let ctx;
@@ -7,9 +9,6 @@ let queue
 let timer
   
 export default {
-    data() {
-        return {}
-    },
     props: {
     count: {
       type: Number,
@@ -40,7 +39,7 @@ export default {
         this.likeClick();    
     },
     /**点赞 */
-    likeClick() {
+    likeClick1() {
       wx.downloadFile({
         url: "https://frank-1302698468.cos.ap-beijing.myqcloud.com/icons/24.png",
         success: (result) => {
@@ -66,6 +65,26 @@ export default {
       });
         
       // const image = require("./images/" + this.getRandomInt(1, 7) + ".png")
+    },
+    likeClick() {
+        const image = `../../../../../static/bubble/${this.getRandomInt(1, 7)}.png`;
+                            const anmationData = {
+        id: new Date().getTime(),
+        timer: 0,
+        opacity: 0.5,
+        pathData: this.generatePathData(),
+        image,
+        factor: {
+          speed: 0.004, // 运动速度，值越小越慢
+          t: 0 //  贝塞尔函数系数
+        }
+      };
+      if (Object.keys(queue).length > 0) {
+        queue[anmationData.id] = anmationData;
+      } else {
+        queue[anmationData.id] = anmationData;
+        this.bubbleAnimate();
+      }
     },
     // likeClick2() {
     //   const src = "./images/" + this.getRandomInt(1, 7) + ".png"
@@ -155,7 +174,6 @@ export default {
         curAlpha = y / height;
         curAlpha = Math.min(1, curAlpha);
         ctx.globalAlpha = curAlpha;
-        console.log('data', anmationData.image)
         ctx.drawImage(anmationData.image, x - curWidth / 2, y, curWidth, curWidth);
         if (anmationData.factor.t > 1) {
           delete queue[anmationData.id];
@@ -195,7 +213,6 @@ export default {
   bottom: 110rpx;
   z-index: 10;
   pointer-events: none;
-  border: 1px solid red;
 }
 
 </style>

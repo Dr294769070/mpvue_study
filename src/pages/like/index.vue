@@ -17,9 +17,9 @@ export default {
         }
     },
     mounted() {
-        // setInterval(() => {
-        //     this.count++
-        // }, 1000)
+        setInterval(() => {
+            this.count++
+        }, 1000)
     },
     methods: {
         clickHandler() {
