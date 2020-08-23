@@ -1,9 +1,13 @@
 <template>
-  <div>
-    <canvas canvas-id="bubble" :style="canvasStyle" class="like-fx" ></canvas>
-  </div>
+<canvas
+  type="2d"
+  id="canvas"
+  class="like-fix"
+  :style="canvasStyle"
+></canvas>
 </template>
 <script>
+let canvas
 let ctx;
 let queue
 let timer
@@ -67,13 +71,16 @@ export default {
       // const image = require("./images/" + this.getRandomInt(1, 7) + ".png")
     },
     likeClick() {
-        const image = `../../../../../static/bubble/${this.getRandomInt(1, 7)}.png`;
-                            const anmationData = {
+        // const image = `../../../../../static/bubble/${this.getRandomInt(1, 7)}.png`;
+        let img = canvas.createImage();
+        img.src = `../../../../../static/bubble/${this.getRandomInt(1, 7)}.png`
+        img.onload = () => {
+        const anmationData = {
         id: new Date().getTime(),
         timer: 0,
         opacity: 0.5,
         pathData: this.generatePathData(),
-        image,
+        image: img,
         factor: {
           speed: 0.004, // 运动速度，值越小越慢
           t: 0 //  贝塞尔函数系数
@@ -85,6 +92,7 @@ export default {
         queue[anmationData.id] = anmationData;
         this.bubbleAnimate();
       }
+        };
     },
     // likeClick2() {
     //   const src = "./images/" + this.getRandomInt(1, 7) + ".png"
@@ -178,6 +186,8 @@ export default {
         console.log('curalpha:', curAlpha)
         curAlpha = Math.min(1, curAlpha); // 透明度从1 -> 0 也就是说 由完全不透明转为完全透明 当到达顶部的时候 完全透明
         ctx.globalAlpha = curAlpha;
+        canvas.height = canvas.height
+        cxt.clearRect(0,0,canvas.width,canvas.height)
         ctx.drawImage(anmationData.image, x - curWidth / 2, y, curWidth, curWidth);
         if (anmationData.factor.t > 1) {
           delete queue[anmationData.id];
@@ -186,20 +196,34 @@ export default {
           delete queue[anmationData.id];
         }
       });
-      ctx.draw();
+      // ctx.draw();
+      // 
+      console.log('canvas.height', canvas.height)
       if (Object.keys(queue).length > 0) {
         timer = setTimeout(() => {
           this.bubbleAnimate();
         }, 5);
       } else {
         clearTimeout(timer);
-        ctx.draw(); // 清空画面
+        // ctx.draw(); // 清空画面
+        // canvas.height = canvas.height
+        cxt.clearRect(0,0,canvas.width,canvas.height)
       }
     }
   },
 
   mounted() {
-    ctx = wx.createCanvasContext("bubble", this);
+    // ctx = wx.createCanvasContext("bubble", this);
+    const query = wx.createSelectorQuery()
+    query.select('#canvas')
+      .fields({ node: true, size: true })
+      .exec((res) => {
+        canvas = res[0].node
+        ctx = canvas.getContext('2d')
+        canvas.height = canvas.height
+        canvas.width = canvas.width
+        console.log('canvas', canvas)
+      })
     queue = {};
   },
 

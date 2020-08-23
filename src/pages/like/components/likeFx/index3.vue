@@ -7,6 +7,8 @@
 let ctx;
 let queue
 let timer
+let curAlpha
+let curAlpha1
   
 export default {
     props: {
@@ -21,12 +23,17 @@ export default {
     width: {
       type: Number,
       default: 90
+    },
+    lock: {
+        type: Boolean,
+        default: false
     }
     },
     watch: {
       count: function() {
-        this.likeChange()
-      }
+          if (!this.lock) this.likeChange()
+        
+      },
     },
     computed: {
         canvasStyle() {
@@ -75,7 +82,7 @@ export default {
         pathData: this.generatePathData(),
         image,
         factor: {
-          speed: 0.004, // 运动速度，值越小越慢
+          speed: 0.002, // 运动速度，值越小越慢
           t: 0 //  贝塞尔函数系数
         }
       };
@@ -156,6 +163,7 @@ export default {
         height = this.height;
       Object.keys(queue).forEach(key => {
         const anmationData = queue[+key];
+        // if (this.lock) anmationData.factor.speed = 0.004
         const {
           x,
           y
@@ -173,10 +181,9 @@ export default {
         // 开始的时候curWidth比较小 所以图片会比较小
         // 然后逐渐变大，最大30
 
-        var curAlpha = anmationData.opacity;
+        // var curAlpha = anmationData.opacity;
         curAlpha = y / height;
-        console.log('curalpha:', curAlpha)
-        curAlpha = Math.min(1, curAlpha); // 透明度从1 -> 0 也就是说 由完全不透明转为完全透明 当到达顶部的时候 完全透明
+        curAlpha = Math.min(1, curAlpha); 
         ctx.globalAlpha = curAlpha;
         ctx.drawImage(anmationData.image, x - curWidth / 2, y, curWidth, curWidth);
         if (anmationData.factor.t > 1) {
