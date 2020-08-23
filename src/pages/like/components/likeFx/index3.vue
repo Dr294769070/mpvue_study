@@ -8,7 +8,7 @@ let ctx;
 let queue
 let timer
 let curAlpha
-let curAlpha1
+let curAlpha1 = 1
   
 export default {
     props: {
@@ -31,9 +31,9 @@ export default {
     },
     watch: {
       count: function() {
-          if (!this.lock) this.likeChange()
+        if (!this.lock) this.likeChange()
         
-      },
+      }
     },
     computed: {
         canvasStyle() {
@@ -161,6 +161,7 @@ export default {
     bubbleAnimate() {
       let width = this.width,
         height = this.height;
+        console.log('bub')
       Object.keys(queue).forEach(key => {
         const anmationData = queue[+key];
         // if (this.lock) anmationData.factor.speed = 0.004
@@ -183,7 +184,15 @@ export default {
 
         // var curAlpha = anmationData.opacity;
         curAlpha = y / height;
-        curAlpha = Math.min(1, curAlpha); 
+        curAlpha = Math.min(1, curAlpha);
+        
+        if (this.lock) {
+            curAlpha1 = curAlpha1 - 0.005 > 0 ? curAlpha1 - 0.005 : 0
+            curAlpha = curAlpha1 * curAlpha
+        } else {
+            curAlpha1 = 1
+        }
+        
         ctx.globalAlpha = curAlpha;
         ctx.drawImage(anmationData.image, x - curWidth / 2, y, curWidth, curWidth);
         if (anmationData.factor.t > 1) {
@@ -194,13 +203,15 @@ export default {
         }
       });
       ctx.draw();
-      if (Object.keys(queue).length > 0) {
+      console.log('curAlpha', curAlpha)
+      if (curAlpha == 0 && this.lock || Object.keys(queue).length == 0) {
+          clearTimeout(timer);
+          queue = {}
+          // ctx.draw(); // 清空画面
+      } else if (Object.keys(queue).length > 0) {
         timer = setTimeout(() => {
           this.bubbleAnimate();
         }, 5);
-      } else {
-        clearTimeout(timer);
-        ctx.draw(); // 清空画面
       }
     }
   },
