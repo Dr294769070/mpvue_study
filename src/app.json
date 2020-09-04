@@ -1,5 +1,6 @@
 {
     "pages": [
+        "pages/video/main",
         "pages/like/main",
         "pages/index/main",
         "pages/list/main",
