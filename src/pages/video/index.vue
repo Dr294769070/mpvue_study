@@ -11,7 +11,7 @@
         ></video>
         <div class="com-progress">
         <div class="content">
-            <div class="btn" @tap="handleClick"></div>
+            <div class="btn" :class="btnClass" @tap="handleClick"></div>
             <div class="pro-com">
                 <div class="time now">{{ currentTimeFormat }}</div>
                 <div class="progress"></div>
@@ -20,7 +20,9 @@
                  @touchstart="handleTouchStart"
                  @touchmove="handleTouchMove"
                  @touchend="handleTouchEnd"
-                 ></div>
+                 >
+                 <div class="circle-core"></div>
+                 </div>
             </div>
         </div>
         <div class="tip-time" v-show="tipTime">
@@ -98,6 +100,9 @@ export default {
         gbStyle() {
             return this.autoMove || this.leftX == 0 ? 'left:' + (this.left + 100) + 'rpx' : 'position:fixed;left:' + this.leftX + 'rpx'
         },
+        btnClass() {
+            return this.pause ? 'play' : 'pause'
+        },
         currentTimeFormat() {
             return time_conversion(this.currentTime)
         },
@@ -153,6 +158,7 @@ export default {
             // 调用api让视频跳转到指定位置
             // 光标回复自动移动
             // 关闭中央的时间提示
+            // 加一个loading
             this.drag = false
             this.autoMove = true
             this.leftX = 0
@@ -193,10 +199,16 @@ export default {
 .btn{
     width: 50rpx;
     height: 50rpx;
-    background: #ffffff;
-    opacity: .3;
     border-radius: 50%;
     margin: 0 25rpx;
+}
+.play{
+    background: url("https://frank-1302698468.cos.ap-beijing.myqcloud.com/icons/play.png") no-repeat;
+    background-size: 50rpx;
+}
+.pause{
+    background: url("https://frank-1302698468.cos.ap-beijing.myqcloud.com/icons/pause.png") no-repeat;
+    background-size: 50rpx;
 }
 .pro-com{
     display: flex;
@@ -224,11 +236,19 @@ export default {
 .circle{
     position: absolute;
     left: 100rpx;
+    width: 50rpx;
+    height: 50rpx;
+    transform: translate(-25rpx, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.circle-core{
+    box-sizing: border-box;
     width: 24rpx;
     height: 24rpx;
     background: #FFFFFF;
     border: 4rpx solid rgba(255, 255, 255, 0.3);
-    transform: translate(-12rpx, 0);
     border-radius: 50%;
 }
 
