@@ -1,5 +1,6 @@
 {
     "pages": [
+        "pages/vDanmu/main",
         "pages/video/main",
         "pages/danmu/main",
         "pages/like/main",
