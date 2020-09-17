@@ -1,6 +1,7 @@
 {
     "pages": [
         "pages/video/main",
+        "pages/danmu/main",
         "pages/like/main",
         "pages/index/main",
         "pages/list/main",

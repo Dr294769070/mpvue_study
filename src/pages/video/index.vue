@@ -56,13 +56,6 @@ function time_conversion($times){
           }
           return $result
 }
-function rpx2px(distance) {
-    let result = 0
-    if (!isNaN(distance)) {
-        result = wx.getSystemInfoSync().windowWidth * distance / 750
-    }
-    return result
-}
 function px2rpx(distance) {
     let result = 0;
     if (!isNaN(distance)) {
@@ -75,7 +68,9 @@ function px2rpx(distance) {
 export default {
     data() {
         return {
-            playbackUrl: 'https://frank-1302698468.cos.ap-beijing.myqcloud.com/video/%E7%81%B5%E7%AC%BC%E7%89%87%E6%AE%B5.mp4', // 'https://frank-1302698468.cos.ap-beijing.myqcloud.com/video/mountain%26cloud.mp4',
+            playbackUrl: 'http://1252684967.vod2.myqcloud.com/54f1d014vodcq1252684967/10e412175285890807610589368/playlist_eof.m3u8',
+            // 'https://frank-1302698468.cos.ap-beijing.myqcloud.com/video/%E7%81%B5%E7%AC%BC%E7%89%87%E6%AE%B5.mp4',
+            // 'https://frank-1302698468.cos.ap-beijing.myqcloud.com/video/mountain%26cloud.mp4',
             count: 0,
             pause: false, // 是否为暂停状态
             autoMove: true, // 光标自动移动
